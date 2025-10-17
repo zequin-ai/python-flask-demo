@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "Installing Python deps"
+      - pip install -r app/requirements.txt
+      - pip install pytest
+  build:
+    commands:
+      - echo "Running tests"
+      - pytest -q
+  post_build:
+    commands:
+      - echo "Packaging Elastic Beanstalk artifact"
+      - mkdir -p bundle
+      - cp -r app/* bundle/
+      - cp runtime.txt bundle/
+      - cd bundle && zip -r ../artifact.zip .
+artifacts:
+  files:
+    - artifact.zip
